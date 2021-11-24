@@ -46,11 +46,11 @@ function TodoApp(listElement: HTMLDivElement) {
       <input class="form-control" list="tagOptions" id="tagList" placeholder="Tag" />
       <datalist id="tagOptions">
         ${Array.from(dataSet)
-          .map(
-            (el) => `
+      .map(
+        (el) => `
           <option value="${el}">`
-          )
-          .join("\n")}
+      )
+      .join("\n")}
       </datalist>
 
       <button class="btn btn-outline-success" type="submit">Add</button>
@@ -125,8 +125,13 @@ function TodoApp(listElement: HTMLDivElement) {
     setState(data);
   }
 
-  function toggleTodo(todo: Todo): Todo {
-    
+  function toggleTodo(value: Todo): Todo {
+    return {
+      ...value,
+      done: !value.done,
+
+    }
+
   }
 
   function createTodo(text: string, rawTag: string = ""): Todo {
@@ -161,13 +166,25 @@ function TodoApp(listElement: HTMLDivElement) {
 
     return [icon, label];
   }
+  interface completed extends Todo {
+    done: true
+  }
 
-  function completeAll(todos: Todo[]): Array<Todo & { done: true }> {
-    
+  function completeAll(todos: Todo[]): Array<completed> {
+    return todos.map((val) => {
+      return {
+        ...val,
+        done: true
+      }
+    }
+
+    )
+
   }
 
   function getTotalDone(todos: Todo[]): number {
-    
+    return todos.reduce((acc, red) => acc + Number(red.done), 0);
+
   }
 
   function render() {
