@@ -1,6 +1,6 @@
-type BuiltInTag = "home" | "work";
+type BuiltInTag = "home" | "school" | "work";
 
-type TodoTag = BuiltInTag | { custom: string };
+type TodoTag = BuiltInTag | "pin";
 
 type Todo = Readonly<{
   id: number;
@@ -33,7 +33,7 @@ function makeState<S>(initialState: S) {
 // Application
 function TodoApp(listElement: HTMLDivElement) {
   const { getState, setState } = makeState<Todo[]>([]);
-  const dataSet: Set<BuiltInTag> = new Set(["home", "work"]);
+  const dataSet: Set<BuiltInTag> = new Set(["home", "work", "school"]);
   let nextId = 0;
 
   listElement.innerHTML = `
@@ -144,7 +144,7 @@ function TodoApp(listElement: HTMLDivElement) {
   }
 
   function getTodoTag(tag: string): TodoTag {
-    return tag === "home" || tag === "work" ? tag : { custom: tag };
+    return tag === "home" || tag === "school" || tag === "work" ? tag : "pin";
   }
 
   function createTodoTagTuple(tag: TodoTag): [HTMLElement, HTMLSpanElement] {
@@ -159,9 +159,12 @@ function TodoApp(listElement: HTMLDivElement) {
     } else if (tag === "work") {
       icon.classList.add("bi-briefcase");
       label.textContent = "Work";
-    } else {
+    } else if (tag == "pin") {
       icon.classList.add("bi-pin");
-      label.textContent = tag.custom;
+      label.textContent = "pin";
+    } else {
+      icon.classList.add("bi-mortarboard");
+      label.textContent = "school";
     }
 
     return [icon, label];
